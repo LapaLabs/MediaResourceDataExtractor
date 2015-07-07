@@ -13,7 +13,7 @@ $ composer require lapalabs/youtube-helper dev-master
 
 ## Usage
 
-You can easily create valid YouTube resource:
+You can easily create valid YouTube resource object:
 
 ``` php
 use LapaLabs\YoutubeExtractor\Resource\YoutubeResource;

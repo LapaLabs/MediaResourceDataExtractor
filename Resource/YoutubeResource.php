@@ -148,6 +148,38 @@ class YoutubeResource
     }
 
     /**
+     * The valid HTML code to embed this resource
+     *
+     * @param array $attributes
+     * @return string
+     */
+    public function buildEmbedCode(array $attributes = [])
+    {
+        // <iframe width="560" height="315" src="https://www.youtube.com/embed/5qanlirrRWs" frameborder="0" allowfullscreen></iframe>
+        $defaultAttributes = [
+            'width'           => 560,
+            'height'          => 315,
+            'src'             => '', // hold position
+            'frameborder'     => 0,
+            'allowfullscreen' => null,
+        ];
+        $attributes = array_merge($defaultAttributes, $attributes, [
+            'src' => $this->buildEmbedUrl(),
+        ]);
+
+        $attributeStrings = [''];
+        foreach ($attributes as $name => $value) {
+            $attributeString = trim($name);
+            if (null === $value) {
+                $attributeString .= '="' . trim($value) . '"';
+            }
+            $attributeStrings[] = $attributeString;
+        }
+
+        return '<iframe' . implode(' ', $attributeStrings) . '></iframe>';
+    }
+
+    /**
      * @param string $resourceId
      * @return bool
      */

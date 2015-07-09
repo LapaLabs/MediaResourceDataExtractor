@@ -151,7 +151,7 @@ class YoutubeResource
      * @param string $resourceId
      * @return bool
      */
-    public function isValidId($resourceId)
+    public static function isValidId($resourceId)
     {
         return 11 === strlen($resourceId);
     }

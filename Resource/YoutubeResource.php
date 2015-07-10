@@ -2,6 +2,10 @@
 
 namespace LapaLabs\YoutubeHelper\Resource;
 
+use LapaLabs\YoutubeHelper\Exception\InvalidHostException;
+use LapaLabs\YoutubeHelper\Exception\InvalidIdException;
+use LapaLabs\YoutubeHelper\Exception\InvalidUrlException;
+
 /**
  * Class YoutubeResource
  *
@@ -77,7 +81,7 @@ class YoutubeResource
     public static function createFromUrl($resourceUrl)
     {
         if (false === filter_var($resourceUrl, FILTER_VALIDATE_URL)) {
-            throw new \InvalidArgumentException('The given argument is invalid URL.');
+            throw new InvalidUrlException(new static(), $resourceUrl);
         }
 
         $parsedUrl = parse_url($resourceUrl);
@@ -125,10 +129,10 @@ class YoutubeResource
                     break;
 
                 default:
-                    throw new \InvalidArgumentException('The given argument is invalid YouTube resource URL.');
+                    throw new InvalidHostException(new static(), $host);
             }
         } else {
-            throw new \InvalidArgumentException('The given argument is invalid URL.');
+            throw new InvalidUrlException(new static(), $resourceUrl);
         }
 
         return new static($resourceId);
@@ -156,7 +160,7 @@ class YoutubeResource
                 break;
 
             default:
-                throw new \InvalidArgumentException('The given argument is invalid YouTube host.');
+                throw new InvalidHostException($this, $host);
         }
 
         return 'https://' . $host . $path . $this->id;
@@ -273,14 +277,15 @@ class YoutubeResource
     /**
      * @param string $resourceId
      * @return $this
+     * @throws InvalidIdException
      */
     protected function setId($resourceId)
     {
-        if (!$this->isValidId($resourceId)) {
-            throw new \InvalidArgumentException('The given argument is invalid YouTube ID.');
-        }
-
         $this->id = $resourceId;
+
+        if (!$this->isValidId($this->id)) {
+            throw new InvalidIdException($this);
+        }
 
         return $this;
     }

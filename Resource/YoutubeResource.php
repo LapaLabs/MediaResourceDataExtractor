@@ -51,6 +51,7 @@ class YoutubeResource
 
     /**
      * @param string $resourceId
+     * @throws InvalidIdException
      */
     public function __construct($resourceId)
     {
@@ -68,6 +69,7 @@ class YoutubeResource
     /**
      * @param $resourceId
      * @return static
+     * @throws InvalidIdException
      */
     public static function create($resourceId)
     {
@@ -77,11 +79,14 @@ class YoutubeResource
     /**
      * @param $resourceUrl
      * @return static
+     * @throws InvalidUrlException
+     * @throws InvalidHostException
+     * @throws InvalidIdException
      */
     public static function createFromUrl($resourceUrl)
     {
         if (false === filter_var($resourceUrl, FILTER_VALIDATE_URL)) {
-            throw new InvalidUrlException(new static(), $resourceUrl);
+            throw new InvalidUrlException($resourceUrl);
         }
 
         $parsedUrl = parse_url($resourceUrl);
@@ -110,7 +115,7 @@ class YoutubeResource
                     ) {
                         $resourceId = $matches['v'];
                     } else {
-                        throw new \InvalidArgumentException('The given YouTube resource URL do not contain a valid ID');
+                        throw new InvalidUrlException($resourceUrl);
                     }
 
                     break;
@@ -123,16 +128,16 @@ class YoutubeResource
                     ) {
                         $resourceId = $matches['v'];
                     } else {
-                        throw new \InvalidArgumentException('The given YouTube resource URL do not contain a valid ID');
+                        throw new InvalidUrlException($resourceUrl);
                     }
 
                     break;
 
                 default:
-                    throw new InvalidHostException(new static(), $host);
+                    throw new InvalidHostException($host, static::getValidHosts());
             }
         } else {
-            throw new InvalidUrlException(new static(), $resourceUrl);
+            throw new InvalidUrlException($resourceUrl);
         }
 
         return new static($resourceId);
@@ -141,6 +146,7 @@ class YoutubeResource
     /**
      * @param string $host
      * @return string
+     * @throws InvalidHostException
      */
     protected function buildUrlForHost($host)
     {
@@ -160,7 +166,7 @@ class YoutubeResource
                 break;
 
             default:
-                throw new InvalidHostException($this, $host);
+                throw new InvalidHostException($host, static::getValidHosts());
         }
 
         return 'https://' . $host . $path . $this->id;

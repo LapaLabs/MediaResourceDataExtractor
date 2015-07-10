@@ -2,7 +2,6 @@
 
 namespace LapaLabs\YoutubeHelper\Exception;
 
-use LapaLabs\YoutubeHelper\Resource\YoutubeResource;
 use InvalidArgumentException;
 use Exception;
 
@@ -15,17 +14,17 @@ use Exception;
 class InvalidHostException extends InvalidArgumentException
 {
     /**
-     * @param YoutubeResource $resource
-     * @param int $host
+     * @param string $host
+     * @param array $validHosts
      * {@inheritdoc}
      */
-    public function __construct(YoutubeResource $resource, $host, $message = "", $code = 0, Exception $previous = null)
+    public function __construct($host, array $validHosts, $message = "", $code = 0, Exception $previous = null)
     {
         if (!$message) {
             $message = sprintf(
                 'Invalid YouTube resource host "%s". The valid hosts are: %s.',
                 $host,
-                implode(', ', $resource->getValidHosts())
+                implode(', ', $validHosts)
             );
         }
 

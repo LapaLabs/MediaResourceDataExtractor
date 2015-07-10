@@ -3,7 +3,7 @@
 namespace LapaLabs\YoutubeHelper\Exception;
 
 use LapaLabs\YoutubeHelper\Resource\YoutubeResource;
-use InvalidArgumentException;
+use LengthException;
 use Exception;
 
 /**
@@ -12,7 +12,7 @@ use Exception;
  * @author Victor Bocharsky <bocharsky.bw@gmail.com>
  * @license http://opensource.org/licenses/mit-license.php The MIT License
  */
-class InvalidIdException extends InvalidArgumentException
+class InvalidIdException extends LengthException
 {
     /**
      * @param YoutubeResource $resource
@@ -22,7 +22,7 @@ class InvalidIdException extends InvalidArgumentException
     {
         if (!$message) {
             $message = sprintf(
-                'Invalid YouTube resource ID "%s". The length should be equal to 11 characters.',
+                'Invalid YouTube resource ID "%s". The length of ID should be equal to 11 characters.',
                 $resource->getId()
             );
         }

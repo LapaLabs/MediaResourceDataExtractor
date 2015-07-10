@@ -2,7 +2,6 @@
 
 namespace LapaLabs\YoutubeHelper\Exception;
 
-use LapaLabs\YoutubeHelper\Resource\YoutubeResource;
 use InvalidArgumentException;
 use Exception;
 
@@ -15,11 +14,10 @@ use Exception;
 class InvalidUrlException extends InvalidArgumentException
 {
     /**
-     * @param YoutubeResource $resource
-     * @param int $url
+     * @param string $url
      * {@inheritdoc}
      */
-    public function __construct(YoutubeResource $resource, $url, $message = "", $code = 0, Exception $previous = null)
+    public function __construct($url, $message = "", $code = 0, Exception $previous = null)
     {
         if (!$message) {
             $message = sprintf(

@@ -92,17 +92,17 @@ class YoutubeResource
                 case static::M_YOUTUBE_COM:
                 case static::WWW_YOUTUBE_COM:
                     if (true
-                        and true === isset($parsedUrl['path'])
-                        and true === isset($parsedUrl['query'])
-                        and 0 === strcmp('/watch', $parsedUrl['path'])
-                        and null == parse_str($parsedUrl['query'], $output)
-                        and isset($output['v'])
-                        and static::isValidId($output['v'])
+                        && true === isset($parsedUrl['path'])
+                        && true === isset($parsedUrl['query'])
+                        && 0 === strcmp('/watch', $parsedUrl['path'])
+                        && null === parse_str($parsedUrl['query'], $output)
+                        && isset($output['v'])
+                        && static::isValidId($output['v'])
                     ) {
                         $resourceId = $output['v'];
                     } elseif (true
-                        and true === isset($parsedUrl['path'])
-                        and 1 === preg_match('@^/embed/(?<v>[\w-]{11})($|/|#|\?)@', $parsedUrl['path'], $matches)
+                        && true === isset($parsedUrl['path'])
+                        && 1 === preg_match('@^/embed/(?<v>[\w-]{11})($|/|#|\?)@', $parsedUrl['path'], $matches)
                     ) {
                         $resourceId = $matches['v'];
                     } else {
@@ -114,8 +114,8 @@ class YoutubeResource
                 // https://youtu.be/5qanlirrRWs
                 case static::YOUTU_BE:
                     if (true
-                        and true === isset($parsedUrl['path'])
-                        and 1 === preg_match('@^/(?<v>[\w-]{11})($|/|#|\?)@', $parsedUrl['path'], $matches)
+                        && true === isset($parsedUrl['path'])
+                        && 1 === preg_match('@^/(?<v>[\w-]{11})($|/|#|\?)@', $parsedUrl['path'], $matches)
                     ) {
                         $resourceId = $matches['v'];
                     } else {

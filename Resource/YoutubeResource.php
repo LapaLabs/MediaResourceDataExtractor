@@ -35,6 +35,17 @@ class YoutubeResource
     protected $id;
 
     /**
+     * @var array
+     */
+    protected $attributes = [
+        'width'           => 560,
+        'height'          => 315,
+        'src'             => '', // hold attribute position for src
+        'frameborder'     => 0,
+        'allowfullscreen' => null,
+    ];
+
+    /**
      * @param string $resourceId
      */
     public function __construct($resourceId)
@@ -50,11 +61,19 @@ class YoutubeResource
         return (string)$this->id;
     }
 
+    /**
+     * @param $resourceId
+     * @return static
+     */
     public static function create($resourceId)
     {
         return new static($resourceId);
     }
 
+    /**
+     * @param $resourceUrl
+     * @return static
+     */
     public static function createFromUrl($resourceUrl)
     {
         if (false === filter_var($resourceUrl, FILTER_VALIDATE_URL)) {
@@ -115,32 +134,77 @@ class YoutubeResource
         return new static($resourceId);
     }
 
+    /**
+     * @param string $host
+     * @return string
+     */
+    protected function buildUrlForHost($host)
+    {
+        switch ($host) {
+            // https://youtube.com/watch?v=5qanlirrRWs
+            // https://m.youtube.com/watch?v=5qanlirrRWs
+            // https://www.youtube.com/watch?v=5qanlirrRWs
+            case static::YOUTUBE_COM:
+            case static::M_YOUTUBE_COM:
+            case static::WWW_YOUTUBE_COM:
+                $path = '/watch?v=';
+                break;
 
+            // https://youtu.be/5qanlirrRWs
+            case static::YOUTU_BE:
+                $path = '/';
+                break;
+
+            default:
+                throw new \InvalidArgumentException('The given argument is invalid YouTube host.');
+        }
+
+        return 'https://' . $host . $path . $this->id;
+    }
+
+    /**
+     * @return string
+     */
     public function buildUrl()
     {
         return $this->buildDefaultUrl();
     }
 
+    /**
+     * @return string
+     */
     public function buildDefaultUrl()
     {
         return $this->buildUrlForHost(static::HOST_DEFAULT);
     }
 
+    /**
+     * @return string
+     */
     public function buildAliasUrl()
     {
         return $this->buildUrlForHost(static::HOST_ALIAS);
     }
 
+    /**
+     * @return string
+     */
     public function buildMobileUrl()
     {
         return $this->buildUrlForHost(static::HOST_MOBILE);
     }
 
+    /**
+     * @return string
+     */
     public function buildShortUrl()
     {
         return $this->buildUrlForHost(static::HOST_SHORT);
     }
 
+    /**
+     * @return string
+     */
     public function buildEmbedUrl()
     {
         // https://www.youtube.com/embed/5qanlirrRWs
@@ -156,22 +220,15 @@ class YoutubeResource
     public function buildEmbedCode(array $attributes = [])
     {
         // <iframe width="560" height="315" src="https://www.youtube.com/embed/5qanlirrRWs" frameborder="0" allowfullscreen></iframe>
-        $defaultAttributes = [
-            'width'           => 560,
-            'height'          => 315,
-            'src'             => '', // hold position
-            'frameborder'     => 0,
-            'allowfullscreen' => null,
-        ];
-        $attributes = array_merge($defaultAttributes, $attributes, [
+        $attributes = array_merge($this->attributes, $attributes, [
             'src' => $this->buildEmbedUrl(),
         ]);
 
         $attributeStrings = [''];
         foreach ($attributes as $name => $value) {
             $attributeString = trim($name);
-            if (null === $value) {
-                $attributeString .= '="' . trim($value) . '"';
+            if (null !== $value) {
+                $attributeString .= '="' . htmlspecialchars(trim($value)) . '"';
             }
             $attributeStrings[] = $attributeString;
         }
@@ -215,6 +272,7 @@ class YoutubeResource
 
     /**
      * @param string $resourceId
+     * @return $this
      */
     protected function setId($resourceId)
     {
@@ -223,33 +281,26 @@ class YoutubeResource
         }
 
         $this->id = $resourceId;
+
+        return $this;
     }
 
     /**
-     * @param string $host
-     * @return string
+     * @param array $attributes
+     * @return $this
      */
-    protected function buildUrlForHost($host)
+    public function setAttributes(array $attributes)
     {
-        switch ($host) {
-            // https://youtube.com/watch?v=5qanlirrRWs
-            // https://m.youtube.com/watch?v=5qanlirrRWs
-            // https://www.youtube.com/watch?v=5qanlirrRWs
-            case static::YOUTUBE_COM:
-            case static::M_YOUTUBE_COM:
-            case static::WWW_YOUTUBE_COM:
-                $path = '/watch?v=';
-                break;
+        $this->attributes = $attributes;
 
-            // https://youtu.be/5qanlirrRWs
-            case static::YOUTU_BE:
-                $path = '/';
-                break;
+        return $this;
+    }
 
-            default:
-                throw new \InvalidArgumentException('The given argument is invalid YouTube host.');
-        }
-
-        return 'https://' . $host . $path . $this->id;
+    /**
+     * @return array
+     */
+    public function getAttributes()
+    {
+        return $this->attributes;
     }
 }

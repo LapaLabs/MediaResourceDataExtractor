@@ -40,7 +40,7 @@ class YoutubeResource
     protected $attributes = [
         'width'           => 560,
         'height'          => 315,
-        'src'             => '', // hold attribute position for src
+        'src'             => '', // hold position for specific order
         'frameborder'     => 0,
         'allowfullscreen' => null,
     ];

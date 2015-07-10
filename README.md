@@ -68,3 +68,33 @@ To check whether YouTube resource ID or host is valid use follow methods:
 YoutubeResource::isValidId('5qanlirrRWs'); // return true if ID is valid
 YoutubeResource::isValidHost('youtu.be');  // return true if host is valid
 ```
+
+You can easily get HTML code to embed YouTube resource on your page:
+
+``` php
+$resource->buildEmbedCode(); // with default attributes returns: <iframe width="560" height="315" src="https://www.youtube.com/embed/5qanlirrRWs" frameborder="0" allowfullscreen></iframe>
+
+// to pass any other parameters or override defaults with your own use:
+$resource->buildEmbedCode([
+    'width' => 800,     // override default 560
+    'height' => 600,    // override default 315
+    'class' => 'video', // add new attribute 
+]);
+```
+
+>   The passed attributes to `buildEmbedCode()` methods applies for current embed HTML code only.
+    To change default attributes globally for specific resource you should pass an array of attributes
+    to `setAttributes()` method. To get current default HTML attributes of specific resource use
+    `getAttributes()` method.
+
+There are a few attributes by default:
+
+``` php
+[
+    'width'           => 560,
+    'height'          => 315,
+    'src'             => '', // hold position for specific order
+    'frameborder'     => 0,
+    'allowfullscreen' => null,
+];
+```

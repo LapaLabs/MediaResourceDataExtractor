@@ -221,7 +221,7 @@ class YoutubeResource
     {
         // <iframe width="560" height="315" src="https://www.youtube.com/embed/5qanlirrRWs" frameborder="0" allowfullscreen></iframe>
         $attributes = array_merge($this->attributes, $attributes, [
-            'src' => $this->buildEmbedUrl(),
+            'src' => $this->buildEmbedUrl(), // required attribute
         ]);
 
         $attributeStrings = [''];

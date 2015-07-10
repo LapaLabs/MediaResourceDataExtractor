@@ -50,7 +50,7 @@ class YoutubeResource
      */
     public function __construct($resourceId)
     {
-        $this->id = $this->setId($resourceId);
+        $this->setId($resourceId);
     }
 
     /**

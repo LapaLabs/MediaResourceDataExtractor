@@ -101,7 +101,11 @@ There are a few attributes by default:
 
 ## Links
 
-Feel free to create [issue](/LapaLabs/YoutubeHelper/issues) or [pull request](/LapaLabs/YoutubeHelper/pulls)
-if you find a bug or just want to propose improvement suggestion.
+Feel free to create an [Issue][1] or [Pull Request][2] if you find a bug 
+or just want to propose improvement suggestion.
 
 [Move UP](#youtubehelper)
+
+
+[1]: https://github.com/LapaLabs/YoutubeHelper/issues
+[2]: https://github.com//LapaLabs/YoutubeHelper/pulls

@@ -4,6 +4,7 @@ A tiny package to convenience work with YouTube media resources.
 Allow to extract ID from resource URL and build valid resource URLs.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/73b4b27a-156d-4ea7-925a-807bc18e5898/mini.png)](https://insight.sensiolabs.com/projects/73b4b27a-156d-4ea7-925a-807bc18e5898)
+[![Build Status](https://travis-ci.org/LapaLabs/YoutubeHelper.svg?branch=master)](https://travis-ci.org/LapaLabs/YoutubeHelper)
 
 ## Installation
 

@@ -98,3 +98,10 @@ There are a few attributes by default:
     'allowfullscreen' => null,
 ];
 ```
+
+## Links
+
+Feel free to create [issue](/LapaLabs/YoutubeHelper/issues) or [pull request](/LapaLabs/YoutubeHelper/pulls)
+if you find a bug or just want to propose improvement suggestion.
+
+[Move UP](#youtubehelper)

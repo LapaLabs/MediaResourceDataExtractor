@@ -100,6 +100,12 @@ There are a few attributes by default:
 ];
 ```
 
+> **NOTE:** The `src` attribute is only required for building embed HTML code
+  and will be injected automatically by calling `buildEmbedUrl()` method behind the scenes.
+  So every given `src` value to `buildEmbedCode()` or `setAttributes()` will be ignoring
+  and replacing with correct URL for current resource. You could give it like in example above
+  to point its position in HTML code.
+
 ## Links
 
 Feel free to create an [Issue][1] or [Pull Request][2] if you find a bug 

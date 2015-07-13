@@ -185,6 +185,7 @@ class YoutubeResource
      */
     public function buildDefaultUrl()
     {
+        // https://www.youtube.com/watch?v=5qanlirrRWs
         return $this->buildUrlForHost(static::HOST_DEFAULT);
     }
 
@@ -193,6 +194,7 @@ class YoutubeResource
      */
     public function buildAliasUrl()
     {
+        // https://youtube.com/watch?v=5qanlirrRWs
         return $this->buildUrlForHost(static::HOST_ALIAS);
     }
 
@@ -201,6 +203,7 @@ class YoutubeResource
      */
     public function buildMobileUrl()
     {
+        // https://m.youtube.com/watch?v=5qanlirrRWs
         return $this->buildUrlForHost(static::HOST_MOBILE);
     }
 
@@ -209,6 +212,7 @@ class YoutubeResource
      */
     public function buildShortUrl()
     {
+        // https://youtu.be/5qanlirrRWs
         return $this->buildUrlForHost(static::HOST_SHORT);
     }
 
@@ -237,6 +241,9 @@ class YoutubeResource
         $attributeStrings = [''];
         foreach ($attributes as $name => $value) {
             $attributeString = trim($name);
+            if ('' === $attributeString) {
+                continue;
+            }
             if (null !== $value) {
                 $attributeString .= '="' . htmlspecialchars(trim($value)) . '"';
             }

@@ -5,6 +5,8 @@ Allow to extract ID from resource URL and build valid resource URLs.
 
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/73b4b27a-156d-4ea7-925a-807bc18e5898/mini.png)](https://insight.sensiolabs.com/projects/73b4b27a-156d-4ea7-925a-807bc18e5898)
 [![Build Status](https://travis-ci.org/LapaLabs/YoutubeHelper.svg?branch=master)](https://travis-ci.org/LapaLabs/YoutubeHelper)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/LapaLabs/YoutubeHelper/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/LapaLabs/YoutubeHelper/?branch=master)
+[![Code Coverage](https://scrutinizer-ci.com/g/LapaLabs/YoutubeHelper/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/LapaLabs/YoutubeHelper/?branch=master)
 
 ## Installation
 

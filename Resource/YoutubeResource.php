@@ -10,7 +10,6 @@ use LapaLabs\YoutubeHelper\Exception\InvalidUrlException;
  * Class YoutubeResource
  *
  * @author Victor Bocharsky <bocharsky.bw@gmail.com>
- * @license http://opensource.org/licenses/mit-license.php The MIT License
  */
 class YoutubeResource
 {
@@ -24,6 +23,8 @@ class YoutubeResource
     const HOST_SHORT        = self::YOUTU_BE;
 
     /**
+     * Valid YouTube hosts
+     *
      * @var array
      */
     protected static $validHosts = [
@@ -39,6 +40,15 @@ class YoutubeResource
     protected $id;
 
     /**
+     * URL query parameters
+     *
+     * @var array
+     */
+    protected $parameters = [];
+
+    /**
+     * IFrame HTML tag attributes
+     *
      * @var array
      */
     protected $attributes = [
@@ -50,12 +60,12 @@ class YoutubeResource
     ];
 
     /**
-     * @param string $resourceId
+     * @param string $id
      * @throws InvalidIdException
      */
-    public function __construct($resourceId)
+    public function __construct($id)
     {
-        $this->setId($resourceId);
+        $this->setId($id);
     }
 
     /**
@@ -217,12 +227,21 @@ class YoutubeResource
     }
 
     /**
+     * @param array $parameters
+     *
      * @return string
      */
-    public function buildEmbedUrl()
+    public function buildEmbedUrl(array $parameters = [])
     {
-        // https://www.youtube.com/embed/5qanlirrRWs
-        return 'https://' . static::HOST_DEFAULT . '/embed/' . $this->id;
+        $parameters = array_merge($this->parameters, $parameters);
+
+        // https://www.youtube.com/embed/5qanlirrRWs?controls=0&amp;autoplay=1
+        $url = 'https://'.static::HOST_DEFAULT.'/embed/'.$this->id;
+        if (count($parameters)) {
+            $url .= '?'.implode('&amp;', $this->parameters);
+        }
+
+        return $url;
     }
 
     /**
@@ -254,12 +273,13 @@ class YoutubeResource
     }
 
     /**
-     * @param string $resourceId
+     * @param string $id
+     *
      * @return bool
      */
-    public static function isValidId($resourceId)
+    public static function isValidId($id)
     {
-        return 11 === strlen($resourceId);
+        return 11 === strlen($id);
     }
 
     /**
@@ -288,15 +308,17 @@ class YoutubeResource
     }
 
     /**
-     * @param string $resourceId
+     * @param string $id
+     *
      * @return $this
+     *
      * @throws InvalidIdException
      */
-    protected function setId($resourceId)
+    protected function setId($id)
     {
-        $this->id = $resourceId;
+        $this->id = $id;
 
-        if (!$this->isValidId($this->id)) {
+        if (!static::isValidId($this->id)) {
             throw new InvalidIdException($this);
         }
 
@@ -304,7 +326,28 @@ class YoutubeResource
     }
 
     /**
+     * @param array $parameters
+     *
+     * @return $this
+     */
+    public function setParameters(array $parameters)
+    {
+        $this->parameters = $parameters;
+
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getParameters()
+    {
+        return $this->parameters;
+    }
+
+    /**
      * @param array $attributes
+     *
      * @return $this
      */
     public function setAttributes(array $attributes)

@@ -240,12 +240,9 @@ class YoutubeResource
         if (count($parameters)) {
             $parameterStrings = [];
             foreach ($parameters as $name => $value) {
-                $parameterString = trim($name);
-                if ('' === $parameterString) {
-                    continue;
-                }
+                $parameterString = (string)$name;
                 if (null !== $value) {
-                    $parameterString .= '=' . htmlspecialchars(trim($value));
+                    $parameterString .= '=' . htmlspecialchars($value);
                 }
                 $parameterStrings[] = $parameterString;
             }
@@ -270,12 +267,9 @@ class YoutubeResource
 
         $attributeStrings = [''];
         foreach ($attributes as $name => $value) {
-            $attributeString = trim($name);
-            if ('' === $attributeString) {
-                continue;
-            }
+            $attributeString = (string)$name;
             if (null !== $value) {
-                $attributeString .= '="' . htmlspecialchars(trim($value)) . '"';
+                $attributeString .= '="' . htmlspecialchars($value) . '"';
             }
             $attributeStrings[] = $attributeString;
         }

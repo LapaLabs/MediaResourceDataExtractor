@@ -238,7 +238,18 @@ class YoutubeResource
         // https://www.youtube.com/embed/5qanlirrRWs?controls=0&amp;autoplay=1
         $url = 'https://'.static::HOST_DEFAULT.'/embed/'.$this->id;
         if (count($parameters)) {
-            $url .= '?'.implode('&amp;', $this->parameters);
+            $parameterStrings = [];
+            foreach ($parameters as $name => $value) {
+                $parameterString = trim($name);
+                if ('' === $parameterString) {
+                    continue;
+                }
+                if (null !== $value) {
+                    $parameterString .= '=' . htmlspecialchars(trim($value));
+                }
+                $parameterStrings[] = $parameterString;
+            }
+            $url .= '?'.implode('&amp;', $parameterStrings);
         }
 
         return $url;

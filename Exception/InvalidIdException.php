@@ -2,7 +2,7 @@
 
 namespace LapaLabs\YoutubeHelper\Exception;
 
-use LapaLabs\YoutubeHelper\Resource\YoutubeResource;
+use LapaLabs\YoutubeHelper\Resource\VideoResource;
 use LengthException;
 use Exception;
 
@@ -15,10 +15,10 @@ use Exception;
 class InvalidIdException extends LengthException
 {
     /**
-     * @param YoutubeResource $resource
+     * @param VideoResource $resource
      * {@inheritdoc}
      */
-    public function __construct(YoutubeResource $resource, $message = "", $code = 0, Exception $previous = null)
+    public function __construct(VideoResource $resource, $message = "", $code = 0, Exception $previous = null)
     {
         if (!$message) {
             $message = sprintf(

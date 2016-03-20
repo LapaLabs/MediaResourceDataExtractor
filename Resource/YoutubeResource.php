@@ -7,26 +7,19 @@ use LapaLabs\YoutubeHelper\Exception\InvalidIdException;
 use LapaLabs\YoutubeHelper\Exception\InvalidUrlException;
 
 /**
- * Class YoutubeResource
- *
  * @author Victor Bocharsky <bocharsky.bw@gmail.com>
  */
-class YoutubeResource
+class YoutubeResource extends VideoResource
 {
-    const YOUTU_BE          = 'youtu.be';
-    const YOUTUBE_COM       = 'youtube.com';
-    const M_YOUTUBE_COM     = 'm.youtube.com';
-    const WWW_YOUTUBE_COM   = 'www.youtube.com';
-    const HOST_DEFAULT      = self::WWW_YOUTUBE_COM;
-    const HOST_ALIAS        = self::YOUTUBE_COM;
-    const HOST_MOBILE       = self::M_YOUTUBE_COM;
-    const HOST_SHORT        = self::YOUTU_BE;
+    const YOUTU_BE        = 'youtu.be';
+    const YOUTUBE_COM     = 'youtube.com';
+    const M_YOUTUBE_COM   = 'm.youtube.com';
+    const WWW_YOUTUBE_COM = 'www.youtube.com';
+    const HOST_DEFAULT    = self::WWW_YOUTUBE_COM;
+    const HOST_ALIAS      = self::YOUTUBE_COM;
+    const HOST_MOBILE     = self::M_YOUTUBE_COM;
+    const HOST_SHORT      = self::YOUTU_BE;
 
-    /**
-     * Valid YouTube hosts
-     *
-     * @var array
-     */
     protected static $validHosts = [
         self::YOUTU_BE,
         self::YOUTUBE_COM,
@@ -34,23 +27,6 @@ class YoutubeResource
         self::WWW_YOUTUBE_COM,
     ];
 
-    /**
-     * @var string
-     */
-    protected $id;
-
-    /**
-     * URL query parameters
-     *
-     * @var array
-     */
-    protected $parameters = [];
-
-    /**
-     * IFrame HTML tag attributes
-     *
-     * @var array
-     */
     protected $attributes = [
         'width'           => 560,
         'height'          => 315,
@@ -58,23 +34,6 @@ class YoutubeResource
         'frameborder'     => 0,
         'allowfullscreen' => null,
     ];
-
-    /**
-     * @param string $id
-     * @throws InvalidIdException
-     */
-    public function __construct($id)
-    {
-        $this->setId($id);
-    }
-
-    /**
-     * @return string
-     */
-    public function __toString()
-    {
-        return (string)$this->id;
-    }
 
     /**
      * @param $resourceId
@@ -116,7 +75,7 @@ class YoutubeResource
                         && 0 === strcmp('/watch', $parsedUrl['path'])
                         && null === parse_str($parsedUrl['query'], $output)
                         && isset($output['v'])
-                        && static::isValidId($output['v'])
+                        && static::isIdValid($output['v'])
                     ) {
                         $resourceId = $output['v'];
                     } elseif (true
@@ -154,13 +113,21 @@ class YoutubeResource
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public static function isIdValid($id)
+    {
+        return 11 === strlen($id);
+    }
+
+    /**
      * @param string $host
      * @return string
      * @throws InvalidHostException
      */
     protected function buildUrlForHost($host)
     {
-        switch ($host) {
+        switch (strtolower($host)) {
             // https://youtube.com/watch?v=5qanlirrRWs
             // https://m.youtube.com/watch?v=5qanlirrRWs
             // https://www.youtube.com/watch?v=5qanlirrRWs
@@ -168,18 +135,18 @@ class YoutubeResource
             case static::M_YOUTUBE_COM:
             case static::WWW_YOUTUBE_COM:
                 $path = '/watch?v=';
-                break;
+            break;
 
             // https://youtu.be/5qanlirrRWs
             case static::YOUTU_BE:
                 $path = '/';
-                break;
+            break;
 
             default:
                 throw new InvalidHostException($host, static::getValidHosts());
         }
 
-        return 'https://' . $host . $path . $this->id;
+        return 'https://'.$host.$path.$this->id;
     }
 
     /**
@@ -235,14 +202,14 @@ class YoutubeResource
     {
         $parameters = array_merge($this->parameters, $parameters);
 
-        // https://www.youtube.com/embed/5qanlirrRWs?controls=0&amp;autoplay=1
+        // https://www.youtube.com/embed/5qanlirrRWs
         $url = 'https://'.static::HOST_DEFAULT.'/embed/'.$this->id;
         if (count($parameters)) {
             $parameterStrings = [];
             foreach ($parameters as $name => $value) {
-                $parameterString = (string)$name;
+                $parameterString = urlencode($name);
                 if (null !== $value) {
-                    $parameterString .= '=' . htmlspecialchars($value);
+                    $parameterString .= '='.urlencode($value);
                 }
                 $parameterStrings[] = $parameterString;
             }
@@ -253,120 +220,29 @@ class YoutubeResource
     }
 
     /**
-     * The valid HTML code to embed this resource
+     * Build the valid HTML code to embed this resource
      *
      * @param array $attributes
+     * @param array $parameters
+     *
      * @return string
      */
-    public function buildEmbedCode(array $attributes = [])
+    public function buildEmbedHtml(array $attributes = [], array $parameters = [])
     {
         // <iframe width="560" height="315" src="https://www.youtube.com/embed/5qanlirrRWs" frameborder="0" allowfullscreen></iframe>
         $attributes = array_merge($this->attributes, $attributes, [
-            'src' => $this->buildEmbedUrl(), // required attribute
+            'src' => $this->buildEmbedUrl($parameters), // required attribute
         ]);
 
         $attributeStrings = [''];
         foreach ($attributes as $name => $value) {
             $attributeString = (string)$name;
             if (null !== $value) {
-                $attributeString .= '="' . htmlspecialchars($value) . '"';
+                $attributeString .= '="'.htmlspecialchars($value).'"';
             }
             $attributeStrings[] = $attributeString;
         }
 
-        return '<iframe' . implode(' ', $attributeStrings) . '></iframe>';
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return bool
-     */
-    public static function isValidId($id)
-    {
-        return 11 === strlen($id);
-    }
-
-    /**
-     * @param string $host
-     * @return bool
-     */
-    public static function isValidHost($host)
-    {
-        return in_array(strtolower($host), static::$validHosts);
-    }
-
-    /**
-     * @return array
-     */
-    public static function getValidHosts()
-    {
-        return static::$validHosts;
-    }
-
-    /**
-     * @return string
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param string $id
-     *
-     * @return $this
-     *
-     * @throws InvalidIdException
-     */
-    protected function setId($id)
-    {
-        $this->id = $id;
-
-        if (!static::isValidId($this->id)) {
-            throw new InvalidIdException($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @param array $parameters
-     *
-     * @return $this
-     */
-    public function setParameters(array $parameters)
-    {
-        $this->parameters = $parameters;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getParameters()
-    {
-        return $this->parameters;
-    }
-
-    /**
-     * @param array $attributes
-     *
-     * @return $this
-     */
-    public function setAttributes(array $attributes)
-    {
-        $this->attributes = $attributes;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
+        return '<iframe'.implode(' ', $attributeStrings).'></iframe>';
     }
 }
